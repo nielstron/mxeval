@@ -244,8 +244,8 @@ def check_correctness_typescript(
         verbose=verbose,
         language="typescript",
         extension=".ts",
-        compile_command_lambda=lambda x: f"npx tsc {x} --target es5 --lib es2016".split(),
-        subprocess_command_lambda=lambda x: ["node", f"{x}.js"],
+        compile_command_lambda=lambda x: f"/home/niels/.nvm/versions/node/v16.10.0/bin/npx tsc {x} --target es5 --lib es2016".split(),
+        subprocess_command_lambda=lambda x: ["/home/niels/.nvm/versions/node/v16.10.0/bin/node", f"{x}.js"],
     )
 
 
@@ -479,7 +479,7 @@ def check_correctness_helper(
     completion: str,
     timeout: float,
     completion_id: Optional[int] = None,
-    verbose=False,
+    verbose=True,
     language=None,
     extension=None,
     subprocess_command_lambda=None,
@@ -501,6 +501,8 @@ def check_correctness_helper(
     with open(path, "w") as f:
         f.write(entire_string)
     try:
+        env = os.environ.copy()
+        env["PATH"] = "/home/niels/.nvm/versions/node/v16.10.0/bin:" + env["PATH"]
         if compile_command_lambda is not None:
             compile_result = subprocess.run(
                 compile_command_lambda(base_path),
@@ -509,8 +511,9 @@ def check_correctness_helper(
                 stderr=subprocess.PIPE,
                 text=True,
                 cwd=cwd,
+                env=env,
             )
-            compiled = compile_result.returncode == 2 if language == "typescript" else compile_result.returncode == 0
+            compiled = compile_result.returncode == 0
         else:
             compiled = True
 

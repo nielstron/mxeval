@@ -9,6 +9,7 @@ MULTILINGUAL_HUMANEVAL_METADATA = os.path.join(ROOT, "..", "data", "multilingual
 with open(MULTILINGUAL_HUMANEVAL_METADATA, "r", encoding="utf-8") as fr:
    MULTILINGUAL_HUMANEVAL_METADATA = json.load(fr)
 HUMAN_EVAL_PYTHON = os.path.join(ROOT, "..", "data", "multilingual_humaneval", MULTILINGUAL_HUMANEVAL_METADATA["python"])
+HUMAN_EVAL_TYPESCRIPT = os.path.join(ROOT, "..", "data", "multilingual_humaneval", MULTILINGUAL_HUMANEVAL_METADATA["typescript"])
 HUMAN_EVAL = HUMAN_EVAL_PYTHON
 
 

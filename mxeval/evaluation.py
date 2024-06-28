@@ -128,7 +128,7 @@ def evaluate_functional_correctness(
         for sample in tqdm.tqdm(stream_jsonl(sample_file)):
             task_id = sample["task_id"]
             completion = sample["completion"]
-            args = (problems[task_id], completion, timeout, completion_id[task_id])
+            args = (problems[task_id], completion, timeout, completion_id[task_id], True)
             language = sample["language"]
             check_correctness_function = check_correctness_function_map[language]
             future = executor.submit(check_correctness_function, *args)
@@ -169,6 +169,7 @@ def evaluate_functional_correctness(
             sample["result"] = result[1]["result"]
             sample["passed"] = result[1]["passed"]
             sample["time_elapsed"] = result[1]["time_elapsed"]
+            sample["compiled"] = result[1]["compiled"]
             yield sample
 
     out_file = sample_file + "_results.jsonl"
