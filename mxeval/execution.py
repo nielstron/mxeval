@@ -244,8 +244,9 @@ def check_correctness_typescript(
         verbose=verbose,
         language="typescript",
         extension=".ts",
-        compile_command_lambda=lambda x: f"/home/niels/.nvm/versions/node/v16.10.0/bin/npx tsc {x} --target es5 --lib es2016".split(),
-        subprocess_command_lambda=lambda x: ["/home/niels/.nvm/versions/node/v16.10.0/bin/node", f"{x}.js"],
+        # compile_command_lambda=lambda x: f"/home/niels/.nvm/versions/node/v16.10.0/bin/npx tsc {x} --target es5 --lib es2016".split(),
+        compile_command_lambda=lambda x: f"/home/niels/.nvm/versions/node/v22.3.0/bin/npx tsc {x} --target es2021 --moduleResolution nodenext --module NodeNext".split(),
+        subprocess_command_lambda=lambda x: ["/home/niels/.nvm/versions/node/v22.3.0/bin/node", f"{x}.js"],
     )
 
 
@@ -489,7 +490,8 @@ def check_correctness_helper(
     cwd=None,
 ):
     current_dir = os.path.dirname(os.path.realpath(__file__))
-    entire_string = problem["prompt"] + completion + problem["test"]
+    # entire_string = problem["prompt"] + completion + problem["test"]
+    entire_string = completion + problem["test"]
 
     language_dirname = f"{language}_exec_eval"
 
@@ -534,7 +536,7 @@ def check_correctness_helper(
             passed = exec_result_run.returncode == 0
             message = exec_result_run.stderr
         else:
-            passed, message, elapsed = False, compile_result.stderr, None
+            passed, message, elapsed = False, compile_result.stdout if language == "typescript" else compile_result.stderr, None
 
     except Exception as e:
         if verbose:
